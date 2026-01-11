@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
-  Pressable,
   Text,
   TextInput,
   View
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../src/firebase";
 import { Producto } from "../src/models/Producto";
 
@@ -66,58 +66,62 @@ export default function DetalleProducto() {
   }
 
   return (
-    <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 26, fontWeight: "bold" }}>
-        {producto.nombre}
-      </Text>
+    <SafeAreaView style={{ flex: 1, padding: 25, paddingTop: 10, backgroundColor: "#0e0e0d" }}>
+      <View style={{backgroundColor: "#5c5a3c59",borderRadius:8, justifyContent:"center",alignItems:"center",paddingTop:10}}>
+        <Text style={{ fontSize: 26, fontWeight: "bold", color: "#fffba6" }}>
+          {producto.nombre}
+        </Text>
 
-      {/* PRECIO */}
-      <View style={{ marginVertical: 12 }}>
-        {!editando ? (
-          <>
-            <Text style={{ fontSize: 20, paddingBottom:15 }}>
-              ${producto.precio} {producto.porKilo ? "/kg" : "c/u"}
-            </Text>
-            <Pressable>
-              <Text>Cambiar precio</Text>
-            </Pressable>
-            <Button title="Cambiar precio" onPress={() => setEditando(true)} />
-          </>
-        ) : (
-          <>
-            <TextInput
-              value={nuevoPrecio}
-              onChangeText={setNuevoPrecio}
-              keyboardType="numeric"
-              style={{
-                borderWidth: 1,
-                borderColor: "#ccc",
-                padding: 8,
-                marginBottom: 8,
-                fontSize: 18,
-              }}
-            />
-            <Button title="Guardar" onPress={guardarPrecio} />
-            <View style={{ height: 8 }} />
-            <Button
-              title="Cancelar"
-              color="gray"
-              onPress={() => {
-                setNuevoPrecio(String(producto.precio));
-                setEditando(false);
-              }}
-            />
-          </>
-        )}
+        {/* PRECIO */}
+        <View style={{ marginVertical: 12, }}>
+          {!editando ? (
+            <>
+              <Text style={{ fontSize: 20, paddingBottom: 15, color: "#fffba6" }}>
+                ${producto.precio} {producto.porKilo ? "/kg" : "c/u"}
+              </Text>
+
+              <Button title="Cambiar precio" onPress={() => setEditando(true)} />
+            </>
+          ) : (
+            <>
+              <TextInput
+                value={nuevoPrecio}
+                onChangeText={setNuevoPrecio}
+                keyboardType="numeric"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#ccc",
+                  padding: 8,
+                  marginBottom: 8,
+                  fontSize: 18,
+                  color: "#fffba6"
+                }}
+              />
+              <Button title="Guardar" onPress={guardarPrecio} />
+              <View style={{ height: 8 }} />
+              <Button
+                title="Cancelar"
+                color="gray"
+                onPress={() => {
+                  setNuevoPrecio(String(producto.precio));
+                  setEditando(false);
+                }}
+              />
+            </>
+          )}
+        </View>
       </View>
 
-      <Text style={{ marginVertical: 8 }}>
+
+      <Text style={{ marginVertical: 8, color: "#fffba6" }}>
         Categorías: {producto.categoria?.join(", ")}
       </Text>
+      <View style={{ flex: 1, backgroundColor: "#5c5a3c59", borderRadius: 8, padding: 20, paddingTop: 0 }}>
+        <Text style={{ marginTop: 12, fontSize: 16, color: "#fffba6" }}>
+          {producto.descripcion}
+        </Text>
+      </View>
 
-      <Text style={{ marginTop: 12, fontSize: 16 }}>
-        {producto.descripcion}
-      </Text>
-    </View>
+    </SafeAreaView>
   );
 }

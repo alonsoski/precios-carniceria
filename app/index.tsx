@@ -1,11 +1,11 @@
 import { Picker } from "@react-native-picker/picker";
 import { onValue, ref } from "firebase/database";
 import { useEffect, useMemo, useState } from "react";
-import { FlatList, TextInput, View } from "react-native";
+import { FlatList, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../src/firebase";
 import type { Producto } from "../src/models/Producto";
 import ProductoItem from "./components/productoItem";
-
 export default function Index() {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [filtroTexto, setFiltroTexto] = useState("");
@@ -56,57 +56,67 @@ export default function Index() {
   }, [productos, filtroTexto, filtroCategoria]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, padding: 10, paddingTop: 0, backgroundColor: "#0e0e0d" }}>
+      <View style={{ marginBottom: 20 }}>
+        <Text style={{ fontSize: 40, fontWeight: "500", color: "#fff" }}>Productos</Text>
+        {/* 🔍 Buscador */}
+        <TextInput
+          placeholder="Buscar producto..."
+          placeholderTextColor="#888"
+          value={filtroTexto}
+          onChangeText={setFiltroTexto}
+          style={{
+            borderWidth: 1,
+            borderColor: "#fff",
+            margin: 10,
+            padding: 10,
+            borderRadius: 8,
+            fontSize: 16,
+            color: "#f1e83a"
 
-      {/* 🔍 Buscador */}
-      <TextInput
-        placeholder="Buscar producto..."
-        value={filtroTexto}
-        onChangeText={setFiltroTexto}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          margin: 10,
-          padding: 10,
-          borderRadius: 8,
-          fontSize: 16,
-        }}
-      />
+          }}
+        />
 
-      {/* 🏷️ Filtro categoría */}
-      <View
-        style={{
-          marginHorizontal: 10,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 8,
-          overflow: "hidden",
-        }}
-      >
-        <Picker
-          selectedValue={filtroCategoria}
-          onValueChange={(value) => setFiltroCategoria(value)}
+        {/* 🏷️ Filtro categoría */}
+        <View
+          style={{
+            marginHorizontal: 10,
+            borderWidth: 1,
+            borderColor: "#fff",
+            borderRadius: 8,
+            overflow: "hidden",
+          }}
         >
-          <Picker.Item label="Todas las categorías" value="" />
-          {categorias.map(cat => (
-            <Picker.Item key={cat} label={cat} value={cat} />
-          ))}
-        </Picker>
+          <Picker
+            selectedValue={filtroCategoria}
+            onValueChange={(value) => setFiltroCategoria(value)}
+          >
+            <Picker.Item label="Todas las categorías" color="#888" value="" />
+            {categorias.map(cat => (
+              <Picker.Item key={cat} label={cat} color="#888" value={cat} />
+            ))}
+          </Picker>
+        </View>
       </View>
 
+
       {/* 📋 Lista */}
-      <FlatList
-        data={productosFiltrados}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ProductoItem
-            id={item.id}
-            nombre={item.nombre}
-            precio={item.precio}
-            porKilo={item.porKilo}
-          />
-        )}
-      />
-    </View>
+      <View style={{ paddingHorizontal:10 }}>
+        <FlatList
+          data={productosFiltrados}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ProductoItem
+              id={item.id}
+              nombre={item.nombre}
+              precio={item.precio}
+              porKilo={item.porKilo}
+            />
+          )}
+          style={{ backgroundColor: "#5c5a3c59", borderRadius: 18 }}
+        />
+      </View>
+
+    </SafeAreaView>
   );
 }
